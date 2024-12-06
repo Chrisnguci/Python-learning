@@ -28,7 +28,6 @@ def save_file(movies):
 	file.close()
 
 def open_file(mode: str):
-	
 	with open('movies.csv','r') as file:
 			data = csv.DictReader(file)
 	if mode == 'l':
