@@ -17,6 +17,12 @@
 import os
 import csv
 
+
+MENU_PROMT = "\nEnter 'a' to add a movie, 'l' to see your movie, 'f' to find a movie by title, or 'q' to quit: "
+MODE='year'
+CHOICE='y'
+
+
 def save_file(movies):
 	fields=['name','director','year']
 	path=os.getcwd()
@@ -27,49 +33,50 @@ def save_file(movies):
 		csv_file.writerows(movies)
 	file.close()
 
-def open_file(mode: str):
+def open_file():
 	with open('movies.csv','r') as file:
-			data = csv.DictReader(file)
-	if mode == 'l':
-		return data
-	else:
-		if mode == 'y':
-			pass
-		elif mode == 'd'
-			pass
-		else:
-			print("Wrong choices")
+			data = list(csv.DictReader(file))
+	file.close()
+	return data
 
+	
 
-
-MENU_PROMT = "\nEnter 'a' to add a movie, 'l' to see your movie, 'f' to find a movie by title, or 'q' to quit: "
-movies=[]
-selection = input(MENU_PROMT)
-while selection != 'q':
-	if selection == 'a':
+def add_movies():
 		name = input("Enter the movie name: ")
 		director = input("Enter the movie director: ")
 		year = input("Enter the movie release year: ")
 		movies.append({'name': name,
 					 'director': director,
 					 'year': year})
-		print(movies)
 		save_file(movies)
-	elif selection == 'l':
-			data = open_file(mode=selection)
-			for movie in data:
-				print(f"Movie: {movie['name']} | Director: {movie['director']} |  Year: {movie['year']}")
-		file.close()
-	elif selection == 'f':
-		FIND_OPTIONS = "\n Find movies name, Enter 'y' to find base on 'Year', 'd' to find base on 'Director' "
-		option = lower(input(FIND_OPTIONS))
-		if option == 'y':
-			pass
-		elif option == 'd':
-			pass
+def show_movies():
+	for movie in movies:
+			print(f"Movie: {movie['name']} | Director: {movie['director']} |  Year: {movie['year']}")
+def find_movie():
+	FIND_OPTIONS = "\n Find movies name, Enter 'y' to find base on 'Year', 'd' to find base on 'Director' "
+	option = input(FIND_OPTIONS).lower()
+	if option == 'y':
+		mode='year'
+		choice = input("Enter the year: ")
+	elif option == 'd':
+		mode='director'
+		choice = input("Enter the director: ")
+	for movie in movies:
+		if movie[mode]==choice:
+			print(f"Movie: {movie['name']} | Director: {movie['director']} |  Year: {movie['year']}")
 
-	else:
-		print("Unknow command, Please try agian.")
+user_options = {
+	"a": add_movies,
+	"l": show_movies,
+	"f": find_movie
+}
+
+selection = input(MENU_PROMT)
+movies=open_file()
+while selection != 'q':
+	if selection in user_options:
+		selected_function = user_options[selection]
+		selected_function()
 	selection = input(MENU_PROMT)
 
 
